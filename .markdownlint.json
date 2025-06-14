@@ -1,0 +1,10 @@
+{
+  "MD031": false,
+  "MD040": {
+    "allowed_languages": ["markdown", "text", "bash", "powershell", "python", "json", "yaml", "sql", "html", "css", "javascript", "typescript"],
+    "language_only": false
+  },
+  "MD022": false,
+  "MD032": false,
+  "MD058": false
+}

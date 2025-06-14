@@ -49,6 +49,11 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+
+# Project-specific temporary files
+tests/*_temp.py
+tests/*_debug.py
+tests/temp_*.py
 cover/
 
 # Translations
@@ -135,6 +140,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# pipenv環境
+.venv/
+Pipfile.lock
 
 # Spyder project settings
 .spyderproject
@@ -174,11 +182,11 @@ cython_debug/
 .abstra/
 
 # Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the enitre vscode folder
-# .vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/recommended-extensions.json
 
 # Ruff stuff:
 .ruff_cache/
@@ -192,3 +200,33 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# キーボードモニター固有の除外設定
+# データファイル（個人情報を含むため）
+data/keyboard_log.json
+data/backup/
+data/*.json
+!data/README.md
+!data/DATA_GUIDE.md
+!data/SECURITY_NOTES.md
+
+# ログファイル
+logs/*.log
+!logs/README.md
+!logs/LOGGING_GUIDE.md
+
+# 一時ファイル
+*.tmp
+*.temp
+
+# 個人設定ファイル（存在する場合）
+config_personal.json
+user_config.json
+personal_settings.json
+config.local.json
+
+# REPORT ディレクトリの一部を除外（機密情報を含む可能性）
+REPORT/logs/*.log
+REPORT/analysis/*.json
+REPORT/issues/*_sensitive_*.md
+REPORT/improvements/*_private_*.md
