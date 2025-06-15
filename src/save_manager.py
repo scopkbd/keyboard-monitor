@@ -17,7 +17,7 @@ from typing import Any, Callable, Dict, Optional
 class SaveManager:
     """
     保存管理クラス
-    
+
     アイドル状態での保存と連続入力時の保存を管理する
     """
 
@@ -46,12 +46,14 @@ class SaveManager:
 
         # 動作状態
         self.is_running = False
-        
+
         # 統計情報
         self.save_stats = {
             'idle_saves': 0,
             'continuous_saves': 0,
             'batch_saves': 0,
+            'manual_saves': 0,
+            'shutdown_saves': 0,
             'total_saves': 0
         }
 
@@ -66,7 +68,7 @@ class SaveManager:
         self.is_running = True
         self.continuous_session_start = datetime.now()
         self.keystroke_count_since_save = 0
-        
+
         self.logger.info("SaveManager保存管理を開始しました")
 
     def stop(self) -> None:
@@ -75,7 +77,7 @@ class SaveManager:
             return
 
         self.is_running = False
-        
+
         # アクティブなタイマーをキャンセル
         with self._timer_lock:
             if self.idle_timer:
@@ -87,7 +89,7 @@ class SaveManager:
 
         # 最終保存を実行
         self._perform_save("shutdown")
-        
+
         self.logger.info(f"SaveManager保存管理を停止しました - 統計: {self.save_stats}")
 
     def on_keystroke(self, session_stats: Dict[str, Any]) -> None:
@@ -169,13 +171,13 @@ class SaveManager:
 
             # データを保存
             success = self.data_store.save_data()
-            
+
             if success:
                 # 統計を更新
                 self.save_stats[f'{save_type}_saves'] += 1
                 self.save_stats['total_saves'] += 1
                 self.keystroke_count_since_save = 0
-                
+
                 self.logger.info(f"{save_type}保存を実行しました (キーストローク: {self.keystroke_count_since_save})")
                 return True
             else:

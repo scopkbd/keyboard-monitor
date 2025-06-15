@@ -208,6 +208,14 @@ class KeyboardLogger:
 
             self.is_logging = False
 
+            # セッション統計をクリア
+            self.session_stats = {
+                'keystrokes': 0,
+                'start_time': None,
+                'last_key': None,
+                'last_key_time': None
+            }
+
             # データを保存
             self.data_store.save_data(create_backup=True)
 
@@ -364,17 +372,14 @@ class KeyboardLogger:
         """セッション統計を取得する"""
         stats = self.session_stats.copy()
 
-        if stats['start_time']:
+        if stats['start_time'] and self.is_logging:
             elapsed = datetime.now() - stats['start_time']
             stats['elapsed_time'] = elapsed
             stats['elapsed_seconds'] = elapsed.total_seconds()
-
-            # WPM計算（大まかな推定）
-            if elapsed.total_seconds() > 0:
-                # 平均的に1単語 = 5文字として計算
-                words = stats['keystrokes'] / 5
-                minutes = elapsed.total_seconds() / 60
-                stats['wpm'] = words / minutes if minutes > 0 else 0
+        else:
+            # 記録停止中は時間をリセット
+            stats['elapsed_time'] = None
+            stats['elapsed_seconds'] = 0
 
         return stats
 

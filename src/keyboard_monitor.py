@@ -236,12 +236,7 @@ class KeyboardMonitor:
 
             if 'elapsed_time' in session_stats:
                 elapsed = session_stats['elapsed_time']
-                print(f"経過時間: {elapsed}")
-
-                if 'wpm' in session_stats and session_stats['wpm'] > 0:
-                    print(f"推定WPM: {session_stats['wpm']:.1f}")
-
-        # 総統計
+                print(f"経過時間: {elapsed}")        # 総統計
         total_stats = real_time_stats['total']
         print(f"総キーストローク: {total_stats['total_keystrokes']:,} 回")
 
