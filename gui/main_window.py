@@ -45,7 +45,7 @@ class KeyboardMonitorGUI:
         """GUIアプリケーションの初期化"""
         # アプリケーションユーザーモデルIDを設定（タスクバー識別用）
         self._set_app_user_model_id()
-        
+
         # CustomTkinter の外観設定
         ctk.set_appearance_mode("dark")  # デフォルトはダークモード
         ctk.set_default_color_theme("blue")
@@ -65,7 +65,7 @@ class KeyboardMonitorGUI:
             if os.path.exists(icon_path):
                 self.root.iconbitmap(icon_path)
                 print(f"アイコン設定成功: {icon_path}")
-                
+
                 # Windows固有の追加設定でタスクバーアイコンを強制更新
                 self._set_taskbar_icon(icon_path)
             else:
@@ -268,35 +268,35 @@ class KeyboardMonitorGUI:
         """Windows固有のタスクバーアイコン設定"""
         try:
             import ctypes
-            
+
             # ウィンドウが作成されるまで待機
             self.root.update()
-            
+
             # ウィンドウハンドルを取得
             hwnd = self.root.winfo_id()
-            
+
             # User32.dllとShell32.dllを読み込み
             user32 = ctypes.windll.user32
             shell32 = ctypes.windll.shell32
-            
+
             # アイコンハンドルを取得
             hinstance = ctypes.windll.kernel32.GetModuleHandleW(None)
             icon_handle = shell32.ExtractIconW(hinstance, icon_path, 0)
-            
+
             if icon_handle and icon_handle != 1:
                 # ウィンドウアイコンを設定（タスクバーに反映される）
                 WM_SETICON = 0x0080
                 ICON_SMALL = 0
                 ICON_BIG = 1
-                
+
                 # 小アイコン（タスクバー用）と大アイコン（ウィンドウ用）を設定
                 user32.SendMessageW(hwnd, WM_SETICON, ICON_SMALL, icon_handle)
                 user32.SendMessageW(hwnd, WM_SETICON, ICON_BIG, icon_handle)
-                
+
                 print(f"タスクバーアイコン設定成功")
             else:
                 print(f"アイコンハンドル取得失敗: {icon_handle}")
-                
+
         except Exception as e:
             print(f"タスクバーアイコン設定エラー: {e}")
 
@@ -304,12 +304,12 @@ class KeyboardMonitorGUI:
         """アプリケーションユーザーモデルIDを設定してタスクバーでの識別を改善"""
         try:
             import ctypes
-            
+
             # アプリケーション固有のIDを設定
             app_id = "KeyboardMonitor.GUI.Application"
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
             print(f"AppUserModelID設定: {app_id}")
-            
+
         except Exception as e:
             print(f"AppUserModelID設定エラー: {e}")
 

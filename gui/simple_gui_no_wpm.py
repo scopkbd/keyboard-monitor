@@ -19,9 +19,9 @@ from config import get_config
 from data_store import DataStore
 from logger import KeyboardLogger
 
-# dashboard_no_wmpをimport
+# dashboard_no_wpmをimport
 sys.path.insert(0, str(Path(__file__).parent / "components"))
-from dashboard_no_wmp import Dashboard
+from dashboard_no_wpm import Dashboard
 
 
 class SimpleGUI:
