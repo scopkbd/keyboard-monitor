@@ -95,6 +95,11 @@ python src/keyboard_monitor.py --cli
 python gui/main_window.py
 ```
 
+**統合分析ダッシュボード:**
+```bash
+python run_analytics.py
+```
+
 **モダンダッシュボード版:**
 ```bash
 python gui/modern_dashboard.py
@@ -162,8 +167,14 @@ python src/keyboard_monitor.py --status
 - 📊 **統合ダッシュボード**: 統計、設定、情報を1つのウィンドウで管理
 - 🎨 **ダーク/ライトテーマ**: お好みに合わせたテーマ切り替え
 - 📈 **リアルタイム更新**: 記録中の統計情報をリアルタイム表示
-- 🔗 **統合分析画面**: キーシーケンスと前後関係の詳細分析（開発予定）
+- 🔗 **統合分析画面**: キーシーケンスと前後関係の詳細分析機能搭載
 - ⚙️ **詳細設定**: 保存間隔やテーマの詳細設定
+
+**統合分析ダッシュボード** (`run_analytics.py`)の特徴：
+- 📊 **詳細分析表示**: キー使用頻度、モディファイア分析、シーケンス分析
+- 🔍 **4分割モディファイア表示**: Shift、Ctrl、Alt、Superの個別分析
+- 📈 **ステータスバー統計**: 基本統計情報をヘッダー下部に表示
+- 🎨 **モダンカードデザイン**: 見やすいカード形式での情報表示
 
 **モダンダッシュボード** (`gui/modern_dashboard.py`)の特徴：
 - 💳 **カードスタイルレイアウト**: 情報を見やすいカード形式で表示
@@ -289,9 +300,14 @@ keyboard-monitor/
 │   ├── components/              # GUIコンポーネント
 │   │   ├── dashboard.py         # ダッシュボード（完全版）
 │   │   ├── dashboard_no_wpm.py  # ダッシュボード（簡易版）
-│   │   └── settings_panel.py    # 設定パネル
+│   │   ├── settings_panel.py    # 設定パネル
+│   │   └── analytics/           # 統合分析コンポーネント
+│   │       ├── analytics_page.py # 統合分析ページ
+│   │       ├── key_frequency_card.py # キー頻度カード
+│   │       └── modifier_analysis_card.py # モディファイア分析カード
 │   └── styles/                  # テーマとスタイル
 │       └── themes.py            # テーマ定義
+├── run_analytics.py             # 統合分析ダッシュボード起動
 ├── data/                        # データファイル
 ├── tests/                       # テストファイル
 │   ├── data_save_feature_test.py # データ保存テスト
@@ -355,7 +371,7 @@ python tests/safe_integration_test.py
 - [x] 統計分析機能実装
 - [x] CLI インターフェース実装
 
-### フェーズ2: GUI版（🔧 部分完成）
+### フェーズ2: GUI版（✅ 基本完成）
 
 #### Phase 2.1: 基本GUIフレームワーク
 - [x] CustomTkinter セットアップ
@@ -369,13 +385,14 @@ python tests/safe_integration_test.py
 - [x] 基本統計情報の可視化
 - [x] システムトレイ統合
 
-#### Phase 2.3: 高度な視覚化（未実装）
-- [ ] リアルタイムグラフ表示
-  - [ ] キーストローク頻度グラフ
-  - [ ] タイピング効率チャート
-  - [ ] ヒートマップ表示
-- [ ] インタラクティブな統計ビュー
-- [ ] データエクスポート機能
+#### Phase 2.3: 高度な視覚化（✅ 完成）
+- [x] 統合分析ダッシュボード
+  - [x] キー使用頻度カード表示
+  - [x] モディファイア分析（4分割表示）
+  - [x] シーケンス分析カード
+  - [x] ステータスバー統計表示
+- [x] インタラクティブな統計ビュー
+- [ ] データエクスポート機能（今後の拡張予定）
 
 #### Phase 2.4: 詳細設定とカスタマイズ
 - [ ] 詳細設定GUI

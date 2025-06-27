@@ -25,9 +25,9 @@ except ImportError as e:
 
 from statistics import StatisticsAnalyzer
 
+from components.analytics.analytics_page import AnalyticsPage
 # GUIコンポーネントのインポート
 from components.dashboard import Dashboard
-# from components.statistics_view import StatisticsView  # WPM削除のため一時的にコメントアウト
 from components.settings_panel import SettingsPanel
 from styles.themes import ThemeManager
 
@@ -133,10 +133,10 @@ class KeyboardMonitorGUI:
         dashboard_btn.grid(row=1, column=0, padx=20, pady=(0, 10), sticky="ew")
         self.nav_buttons['dashboard'] = dashboard_btn
 
-        # 統計・分析
+        # 統合分析
         stats_btn = ctk.CTkButton(
             self.sidebar,
-            text="📊 統計・分析",
+            text="📊 統合分析",
             command=self.show_statistics,
             height=40,
             anchor="w"
@@ -207,16 +207,18 @@ class KeyboardMonitorGUI:
     def show_statistics(self):
         """統計・分析画面の表示"""
         self._clear_main_content()
-        # 一時的にプレースホルダー表示（WPM削除のため）
-        placeholder = ctk.CTkLabel(
+
+        # データファイルパスを取得
+        data_file_path = self.data_store.data_file
+
+        # 統合分析ページを作成
+        self.current_page = AnalyticsPage(
             self.main_frame,
-            text="統計・分析機能（WPM削除により一時的に無効）",
-            font=ctk.CTkFont(size=16)
+            data_file_path=str(data_file_path)
         )
-        placeholder.pack(expand=True)
-        self.current_page = placeholder
+        self.current_page.pack(fill="both", expand=True)
         self._highlight_nav_button('statistics')
-        self.update_status("統計・分析表示中")
+        self.update_status("統合分析ページ表示中")
 
     def show_settings(self):
         """設定画面の表示"""
@@ -320,6 +322,9 @@ class KeyboardMonitorGUI:
 
 def main():
     """メイン関数"""
+    print("🚀 キーボードモニター - 統合分析ダッシュボード起動中...")
+    print("📊 統合分析機能: 有効")
+
     try:
         app = KeyboardMonitorGUI()
         app.run()

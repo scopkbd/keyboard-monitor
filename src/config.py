@@ -18,7 +18,6 @@ class ConfigManager:
         "logging": {
             "data_file": "./data/keyboard_log.json",
             "backup_interval": 3600,  # 秒
-            "max_sequence_length": 1000,
             "auto_save": True,
             "save_interval": 300,  # 秒 (従来の設定、互換性のため残す)
             "idle_save_delay": 1.0,  # 入力停止後の保存遅延（秒）
@@ -37,11 +36,7 @@ class ConfigManager:
             "exclude_sensitive_apps": []
         },
         "analysis": {
-            "track_modifiers": True,
-            "track_sequences": True,
-            "track_bigrams": True,
-            "track_trigrams": True,
-            "min_sequence_count": 2
+            "track_modifiers": True
         },
         "system": {
             "log_level": "INFO",
@@ -189,10 +184,6 @@ class ConfigManager:
     def is_modifier_tracking_enabled(self) -> bool:
         """モディファイアキー追跡が有効かどうか"""
         return self.get("analysis.track_modifiers")
-
-    def is_sequence_tracking_enabled(self) -> bool:
-        """シーケンス追跡が有効かどうか"""
-        return self.get("analysis.track_sequences")
 
     def get_log_level(self) -> str:
         """ログレベルを取得する"""

@@ -61,11 +61,7 @@ class DataStore:
                 "last_record_date": None,
                 "version": "1.0"
             },
-            "key_statistics": {},
-            "key_sequences": {
-                "bigrams": {},
-                "trigrams": {}
-            }
+            "key_statistics": {}
         }
 
     def load_data(self) -> bool:
@@ -184,30 +180,6 @@ class DataStore:
                     modifier_stats["preceded_by"][previous_key] = 0
                 modifier_stats["preceded_by"][previous_key] += 1
 
-    def update_sequence_statistics(self, sequence: List[str], sequence_type: str) -> None:
-        """
-        シーケンス統計を更新する
-
-        Args:
-            sequence: キーシーケンス
-            sequence_type: シーケンスタイプ（'bigrams' または 'trigrams'）
-        """
-        with self._lock:
-            if sequence_type not in self.data["key_sequences"]:
-                self.data["key_sequences"][sequence_type] = {}
-
-            # シーケンスキーを作成
-            sequence_key = "_".join(sequence)
-            sequence_display = "->".join([self._get_key_name(key) for key in sequence])
-
-            if sequence_key not in self.data["key_sequences"][sequence_type]:
-                self.data["key_sequences"][sequence_type][sequence_key] = {
-                    "sequence": sequence_display,
-                    "count": 0
-                }
-
-            self.data["key_sequences"][sequence_type][sequence_key]["count"] += 1
-
     def get_statistics(self, date_range: Optional[tuple] = None) -> Dict[str, Any]:
         """
         統計データを取得する
@@ -304,7 +276,7 @@ class DataStore:
         """
         try:
             # 必須キーの存在確認
-            required_keys = ["total_statistics", "key_statistics", "key_sequences"]
+            required_keys = ["total_statistics", "key_statistics"]
             for key in required_keys:
                 if key not in data:
                     self.logger.error(f"必須キー '{key}' が見つかりません")

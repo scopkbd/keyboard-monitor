@@ -9,9 +9,8 @@ import os
 import sys
 import threading
 import time
-from collections import deque
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Optional
 
 # プロジェクトのsrcディレクトリをパスに追加
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -98,9 +97,9 @@ class KeyboardLogger:
         Key.alt: 'Alt',
         Key.alt_l: 'Left Alt',
         Key.alt_r: 'Right Alt',
-        Key.cmd: 'Win',
-        Key.cmd_l: 'Left Win',
-        Key.cmd_r: 'Right Win',
+        Key.cmd: 'Super',
+        Key.cmd_l: 'Left Super',
+        Key.cmd_r: 'Right Super',
         Key.esc: 'Escape',
         Key.delete: 'Delete',
         Key.home: 'Home',
@@ -138,8 +137,7 @@ class KeyboardLogger:
         # モディファイアキーの状態
         self.pressed_modifiers = set()
 
-        # キーシーケンスの追跡
-        self.key_sequence = deque(maxlen=self.config.get("logging.max_sequence_length", 1000))
+        # 前のキーの追跡
         self.previous_key = None
 
         # 統計情報
@@ -250,9 +248,6 @@ class KeyboardLogger:
                 previous_key=self.previous_key
             )
 
-            # シーケンス分析の更新
-            self._update_sequence_analysis(key_code)
-
             # セッション統計を更新
             self.session_stats['keystrokes'] += 1
             self.session_stats['last_key'] = f"{key_name} ({modifiers})" if modifiers != 'none' else key_name
@@ -311,7 +306,7 @@ class KeyboardLogger:
         elif key in [Key.alt, Key.alt_l, Key.alt_r]:
             return 'alt'
         elif key in [Key.cmd, Key.cmd_l, Key.cmd_r]:
-            return 'win'
+            return 'super'
         return ''
 
     def _get_modifier_combination(self) -> str:
@@ -350,23 +345,6 @@ class KeyboardLogger:
 
         # その他の場合
         return str(key).replace('Key.', '').replace('_', ' ').title()
-
-    def _update_sequence_analysis(self, key_code: str) -> None:
-        """シーケンス分析を更新する"""
-        if not self.config.is_sequence_tracking_enabled():
-            return
-
-        self.key_sequence.append(key_code)
-
-        # Bigram分析
-        if self.config.get("analysis.track_bigrams") and len(self.key_sequence) >= 2:
-            bigram = list(self.key_sequence)[-2:]
-            self.data_store.update_sequence_statistics(bigram, "bigrams")
-
-        # Trigram分析
-        if self.config.get("analysis.track_trigrams") and len(self.key_sequence) >= 3:
-            trigram = list(self.key_sequence)[-3:]
-            self.data_store.update_sequence_statistics(trigram, "trigrams")
 
     def get_session_statistics(self) -> Dict[str, Any]:
         """セッション統計を取得する"""
@@ -416,6 +394,5 @@ class KeyboardLogger:
         return {
             'is_logging': self.is_logging,
             'session_stats': self.get_session_statistics(),
-            'pressed_modifiers': list(self.pressed_modifiers),
-            'sequence_length': len(self.key_sequence)
+            'pressed_modifiers': list(self.pressed_modifiers)
         }

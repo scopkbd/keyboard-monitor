@@ -26,8 +26,7 @@
     "first_record_date": null,
     "last_record_date": null
   },
-  "key_statistics": {},
-  "key_sequences": {}
+  "key_statistics": {}
 }
 ```
 

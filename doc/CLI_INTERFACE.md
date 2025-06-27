@@ -232,3 +232,17 @@ nano config.json
 # または設定コマンドで変更
 python keyboard_monitor.py --config set logging.backup_interval 7200
 ```
+
+## GUI統合テストスクリプト
+
+### 統合分析テスト
+```bash
+# 統合分析機能のテスト実行
+python test_analytics_integration.py
+```
+
+**テスト内容:**
+- 統合分析ページの表示テスト
+- データファイル読み込みテスト
+- 各分析カードの動作確認
+- ステータスバー表示確認

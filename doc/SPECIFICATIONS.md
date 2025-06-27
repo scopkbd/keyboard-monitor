@@ -40,15 +40,6 @@
         "ctrl+shift+alt+win": {"count": 0, "preceded_by": {}}
       }
     }
-  },
-  "key_sequences": {
-    "bigrams": {
-      "83_65": {"sequence": "S->A", "count": 120},
-      "65_83": {"sequence": "A->S", "count": 85}
-    },
-    "trigrams": {
-      "84_72_69": {"sequence": "T->H->E", "count": 45}
-    }
   }
 }
 ```
@@ -93,16 +84,6 @@
 - **3キー組み合わせ**: `ctrl+shift+alt`, `ctrl+shift+win`, `ctrl+alt+win`, `shift+alt+win`
 - **4キー組み合わせ**: `ctrl+shift+alt+win`
 - **preceded_by**: そのモディファイア組み合わせでの直前キー統計
-
-### キーシーケンス仕様
-
-**key_sequences（キーシーケンス）**:
-- **bigrams**: 2文字連続パターン（"TH", "HE", "ER"など）
-- **trigrams**: 3文字連続パターン（"THE", "AND", "ING"など）
-- **活用例**:
-  - 頻出単語の特定
-  - 言語別タイピングパターン分析
-  - ショートカット最適化
 
 ## 技術実装仕様
 

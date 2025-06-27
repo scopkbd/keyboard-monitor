@@ -416,3 +416,142 @@ class ConfigurationManager:
         # スキーマの拡張
         pass
 ```
+
+## GUI版アーキテクチャ
+
+### GUI設計方針
+
+1. **コンポーネントベース設計**: 各機能を独立したコンポーネントとして実装
+2. **データドリブン**: 既存のkeyboard_log.jsonを活用し、追加のデータ層は不要
+3. **モジュラー構成**: 各分析機能が独立して動作し、容易に拡張可能
+4. **レスポンシブデザイン**: ウィンドウサイズに応じて動的にレイアウト調整
+
+### GUI構成図
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      Main Application                       │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐  ┌─────────────────────────────────┐   │
+│  │   Navigation    │  │        Content Area             │   │
+│  │  - Dashboard    │  │  ┌─────────────────────────┐     │   │
+│  │  - Analytics    │  │  │    Analytics Page       │     │   │
+│  │  - Settings     │  │  │ ┌─────────┐ ┌─────────┐ │     │   │
+│  └─────────────────┘  │  │ │Key Freq │ │Modifier │ │     │   │
+│                       │  │ │  Card   │ │  Card   │ │     │   │
+│                       │  │ └─────────┘ └─────────┘ │     │   │
+│                       │  │ ┌─────────────────────┐ │     │   │
+│                       │  │ │  Sequence Analysis  │ │     │   │
+│                       │  │ │       Card          │ │     │   │
+│                       │  │ └─────────────────────┘ │     │   │
+│                       │  └─────────────────────────┘     │   │
+│                       └─────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### GUIコンポーネント詳細
+
+#### 1. メインアプリケーション（main_window.py）
+
+**責務**:
+- アプリケーションの全体制御
+- ナビゲーション管理
+- テーマ切り替え
+- ウィンドウ状態管理
+
+#### 2. 統合分析ページ（analytics_page.py）
+
+**責務**:
+- 各分析カードの統合管理
+- データの一元的な読み込み・更新
+- エクスポート機能の提供
+- ステータス表示の管理
+
+#### 3. 分析カードコンポーネント
+
+##### 3.1 上位キー分析カード（key_frequency_card.py）
+**責務**:
+- キー使用頻度のランキング表示
+- テーブル形式でのデータ表示
+- 使用率のビジュアル表示
+
+##### 3.2 モディファイア詳細カード（modifier_analysis_card.py）
+**責務**:
+- 4列グリッド形式での修飾キー分析
+- 各修飾キー（Shift/Ctrl/Alt/Super）ごとの上位キー表示
+- 色分けとランキング表示
+
+##### 3.3 統合シーケンス分析カード（integrated_sequence_card.py）
+**責務**:
+- 3列レイアウトでのキーシーケンス分析
+- 前後関係マップの表示
+- 上位5キーを対象とした詳細分析
+
+#### 4. データ分析ロジック（data_analyzer.py）
+
+**責務**:
+- keyboard_log.jsonの読み込み・解析
+- 各種統計データの計算
+- 修飾キー分析の実行
+- シーケンス分析の実行
+
+**主要メソッド**:
+```python
+class DataAnalyzer:
+    def load_data(self) -> Dict[str, Any]
+    def get_key_frequency(self) -> Dict[str, int]
+    def get_modifier_usage(self) -> Dict[str, Any]
+    def get_integrated_sequence_analysis(self) -> Dict[str, Any]
+    def get_basic_statistics(self) -> Dict[str, Any]
+```
+
+### データフロー
+
+```
+keyboard_log.json
+        │
+        ▼
+   DataAnalyzer
+        │
+        ├─ get_key_frequency() ─────────► KeyFrequencyCard
+        ├─ get_modifier_usage() ────────► ModifierAnalysisCard
+        ├─ get_sequence_analysis() ─────► IntegratedSequenceCard
+        └─ get_basic_statistics() ──────► Status Bar Display
+```
+
+### スレッド設計（GUI版）
+
+- **メインスレッド**: UI操作とイベント処理
+- **データ読み込みスレッド**: バックグラウンドでのデータ読み込み（UI応答性確保）
+- **CLI版との共存**: CLIとGUIは独立して実行可能
+
+### 拡張性
+
+#### 新しい分析カードの追加
+
+1. **新しいカードクラスの作成**:
+   ```python
+   class NewAnalysisCard(ctk.CTkFrame):
+       def __init__(self, parent, **kwargs):
+           super().__init__(parent, **kwargs)
+           self._setup_ui()
+
+       def update_data(self, data):
+           # データ更新ロジック
+           pass
+   ```
+
+2. **DataAnalyzerメソッドの追加**:
+   ```python
+   def get_new_analysis(self) -> Dict[str, Any]:
+       # 新しい分析ロジック
+       pass
+   ```
+
+3. **AnalyticsPageへの統合**:
+   ```python
+   self.new_card = NewAnalysisCard(self.grid_frame)
+   self.new_card.grid(row=2, column=0, columnspan=2, ...)
+   ```
+
+この設計により、既存のCLI機能を損なうことなく、直感的で拡張可能なGUIインターフェースを提供しています。
